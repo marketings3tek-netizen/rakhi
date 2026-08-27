@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Happy Raksha Bandhan! 🧵✨</title>
+  <!-- Canvas Confetti -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <style>
+    :root {
+      --primary: #ff4d6d;
+      --secondary: #ff758f;
+      --bg: #fff0f3;
+      --card-bg: #ffffff;
+      --text: #590d22;
+      --accent: #ffd166;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #fff0f3 0%, #ffccd5 100%);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      overflow-x: hidden;
+    }
+
+    .container {
+      width: 95%;
+      max-width: 850px;
+      background: var(--card-bg);
+      border-radius: 28px;
+      box-shadow: 0 15px 35px rgba(255, 77, 109, 0.2);
+      padding: 35px 25px;
+      text-align: center;
+      position: relative;
+    }
+
+    .progress-bar {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 25px;
+    }
+
+    .step-dot {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: #ffccd5;
+      transition: all 0.3s ease;
+    }
+
+    .step-dot.active {
+      background: var(--primary);
+      transform: scale(1.25);
+    }
+
+    .step {
+      display: none;
+      animation: fadeIn 0.5s ease-in-out;
+    }
+
+    .step.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 12px;
+      color: var(--primary);
+    }
+
+    p {
+      font-size: 1.15rem;
+      line-height: 1.6;
+      margin-bottom: 25px;
+      color: #800f2f;
+    }
+
+    .btn {
+      background: linear-gradient(45deg, var(--primary), var(--secondary));
+      color: white;
+      border: none;
+      padding: 14px 34px;
+      border-radius: 50px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(255, 77, 109, 0.4);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(255, 77, 109, 0.6);
+    }
+
+    /* Floating Animals & Emojis */
+    .mascot-row {
+      font-size: 2.5rem;
+      margin-bottom: 15px;
+      animation: bounce 2s infinite alternate;
+    }
+
+    @keyframes bounce {
+      from { transform: translateY(0); }
+      to { transform: translateY(-8px); }
+    }
+
+    /* Expanded Photo Grid */
+    .photo-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin: 25px 0;
+    }
+
+    @media (max-width: 600px) {
+      .photo-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .photo-box {
+      width: 100%;
+      height: 380px;
+      background: #ffe5ec;
+      border-radius: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      border: 3px dashed var(--secondary);
+      position: relative;
+    }
+
+    .photo-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .photo-label {
+      position: absolute;
+      bottom: 12px;
+      background: rgba(255, 255, 255, 0.9);
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--primary);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+
+    /* Virtual Rakhi Ceremony */
+    .rakhi-stage {
+      position: relative;
+      height: 220px;
+      margin: 25px 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .wrist {
+      width: 170px;
+      height: 55px;
+      background: #ffd6ba;
+      border-radius: 30px;
+      position: absolute;
+      box-shadow: inset 0 2px 6px rgba(0,0,0,0.15);
+    }
+
+    .wrist-label {
+      position: absolute;
+      top: 70px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #9d0208;
+    }
+
+    .rakhi-item {
+      font-size: 4.2rem;
+      cursor: grab;
+      position: absolute;
+      z-index: 10;
+      transition: transform 0.2s;
+      user-select: none;
+    }
+
+    .rakhi-item:active {
+      cursor: grabbing;
+    }
+
+    .tied {
+      top: 55px !important;
+      left: 50% !important;
+      transform: translateX(-50%) !important;
+      cursor: default;
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: translateX(-50%) scale(1); }
+      50% { transform: translateX(-50%) scale(1.1); }
+      100% { transform: translateX(-50%) scale(1); }
+    }
+
+    .sweet-tray {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      font-size: 2.8rem;
+      margin: 25px 0;
+    }
+
+    .sweet-tray span {
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    .sweet-tray span:hover {
+      transform: scale(1.3);
+    }
+
+    .voucher {
+      background: linear-gradient(135deg, #fff3b0 0%, #ffd166 100%);
+      border: 2px dashed #e76f51;
+      padding: 20px;
+      border-radius: 16px;
+      margin: 20px 0;
+      color: #7f4f24;
+      font-size: 1.05rem;
+      line-height: 1.8;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="progress-bar">
+      <div class="step-dot active"></div>
+      <div class="step-dot"></div>
+      <div class="step-dot"></div>
+      <div class="step-dot"></div>
+      <div class="step-dot"></div>
+    </div>
+
+    <!-- Step 1: Welcome -->
+    <div class="step active" id="step1">
+      <div class="mascot-row">🐱 ✨ 🐶</div>
+      <h1>Special Delivery for Rakshuu!</h1>
+      <p>IK We might not be able to meet today and have you tie me the rakhi, but we can do it onlineee 💖</p>
+      <button class="btn" onclick="nextStep(2)">Open Gift 🎁</button>
+    </div>
+
+    <!-- Step 2: Memories / Photos -->
+    <div class="step" id="step2">
+      <div class="mascot-row">🐶 📸 🐱</div>
+      <h1>Our Favorite Memories</h1>
+      <p>Ik I came into your life later but I DONT WANT TO SPEND ONE MINUTE WITHOUT YOU.</p>
+      
+      <div class="photo-grid">
+        <div class="photo-box">
+          <img src="periya.jpeg" alt="Sister" />
+          <span class="photo-label">The Best Sister 🌸</span>
+        </div>
+        <div class="photo-box">
+          <img src="kutty.jpeg" alt="Brother" />
+          <span class="photo-label">Favorite Brother 😎</span>
+        </div>
+      </div>
+        
+      <button class="btn" onclick="nextStep(3)">Time for the Ceremony 🪔</button>
+    </div>
+
+    <!-- Step 3: Virtual Rakhi Tying -->
+    <div class="step" id="step3">
+      <div class="mascot-row">🌸 🪔 🌸</div>
+      <h1>Virtual Rakhi Ceremony</h1>
+      <p id="rakhi-instruction">Click on the Rakhi to tie it around my wrist virtually!</p>
+      
+      <div class="rakhi-stage">
+        <div class="wrist"></div>
+        <div class="wrist-label">My Wrist 📍</div>
+        <div class="rakhi-item" id="rakhi" onclick="tieRakhi()">🏵️</div>
+      </div>
+
+      <button class="btn" id="rakhi-next" style="display: none;" onclick="nextStep(4)">Have Some Sweets 🍬</button>
+    </div>
+
+    <!-- Step 4: Sweets & Treats -->
+    <div class="step" id="step4">
+      <div class="mascot-row">🐾 🍫 🐾</div>
+      <h1>Sweet saptukoooo</h1>
+      <p>Pick your favorite sweettt to eat:</p>
+      
+      <div class="sweet-tray">
+        <span onclick="eatSweet('Gulab Jamun')">🧆</span>
+        <span onclick="eatSweet('Kaju Katli')">💎</span>
+        <span onclick="eatSweet('Laddoo')">🟡</span>
+        <span onclick="eatSweet('Chocolate')">🍫</span>
+      </div>
+
+      <p id="sweet-message" style="font-weight: bold; min-height: 28px;"></p>
+      <button class="btn" onclick="nextStep(5)">Claim Your Gift 🎁</button>
+    </div>
+
+    <!-- Step 5: Final Promise & Gift Voucher -->
+    <div class="step" id="step5">
+      <div class="mascot-row">🎉 🐕 🐈 🎉</div>
+      <h1>Happy Raksha Bandhan!</h1>
+      <p>Thank you for always having my back (and tolerating me). Here is my official sibling promise to you:</p>
+      
+      <div class="voucher">
+        🎟️ **LIFETIME VOUCHER** 🎟️<br>
+        • I will always attend your call and always be there for you<br>
+        • I will be your biggest cheerleader<br>
+        • Treat/Shopping on me next time we meet!
+      </div>
+
+      <button class="btn" onclick="celebrate()">Celebrate Again! 🎊</button>
+    </div>
+  </div>
+
+  <script>
+    let currentStep = 1;
+
+    function nextStep(step) {
+      document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.step-dot').forEach(el => el.classList.remove('active'));
+
+      document.getElementById(`step${step}`).classList.add('active');
+      document.querySelectorAll('.step-dot')[step - 1].classList.add('active');
+      currentStep = step;
+
+      if (step === 5) {
+        celebrate();
+      }
+    }
+
+    function tieRakhi() {
+      const rakhi = document.getElementById('rakhi');
+      rakhi.classList.add('tied');
+      document.getElementById('rakhi-instruction').innerText = "Tied with unconditional love! ✨";
+      document.getElementById('rakhi-next').style.display = 'inline-block';
+      confetti({ particleCount: 70, spread: 70, origin: { y: 0.6 } });
+    }
+
+    function eatSweet(name) {
+      document.getElementById('sweet-message').innerText = `Nom nom! Enjoyed some delicious ${name}! 😋✨`;
+      confetti({ particleCount: 35, spread: 45 });
+    }
+
+    function celebrate() {
+      confetti({ particleCount: 120, spread: 80, origin: { y: 0.5 } });
+    }
+  </script>
+</body>
+</html>
